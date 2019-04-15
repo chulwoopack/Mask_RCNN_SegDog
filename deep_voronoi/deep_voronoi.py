@@ -382,8 +382,9 @@ class BoltsDataset(utils.Dataset):
         """
 
         # Map class names to class IDs.
-        class_ids = np.array([self.class_names.index(v[0]) for v in voronois])
-        return mask, class_ids.astype(np.int32)
+        #class_ids = np.array([self.class_names.index(v[0]) for v in voronois])
+        #return mask, class_ids.astype(np.int32)
+        return mask.astype(np.bool), np.ones([mask.shape[-1]], dtype=np.int32)
         
     def image_reference(self, image_id):
         """Return the path of the image."""
