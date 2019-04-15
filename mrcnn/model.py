@@ -2057,10 +2057,11 @@ class MaskRCNN():
                              name='mask_rcnn')
 
         # Add multi-GPU support.
+        """
         if config.GPU_COUNT > 1:
             from mrcnn.parallel_model import ParallelModel
             model = ParallelModel(model, config.GPU_COUNT)
-
+        """
         return model
 
     def find_last(self):
@@ -2359,7 +2360,8 @@ class MaskRCNN():
         if os.name is 'nt':
             workers = 0
         else:
-            workers = multiprocessing.cpu_count()
+            #workers = multiprocessing.cpu_count()
+            workers = 1
 
         self.keras_model.fit_generator(
             train_generator,
@@ -2371,7 +2373,7 @@ class MaskRCNN():
             validation_steps=self.config.VALIDATION_STEPS,
             max_queue_size=100,
             workers=1, #workers=workers,
-            use_multiprocessing=False, #use_multiprocessing=True,
+            use_multiprocessing=False
         )
         self.epoch = max(self.epoch, epochs)
 

@@ -31,7 +31,7 @@ import os
 
 #os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 #os.environ["CUDA_VISIBLE_DEVICES"]="0,1,2,3"  # specify which GPU(s) to be used
-os.environ["CUDA_VISIBLE_DEVICES"]="1,3"
+#os.environ["CUDA_VISIBLE_DEVICES"]="1,3"
 
 import sys
 import json
@@ -108,7 +108,7 @@ class BoltsDataset(utils.Dataset):
         subset: Subset to load: train or val
         """
         # Add classes.
-        self.add_class("voronoi", 1, "imageRegion")                 
+        self.add_class("voronoi", 1, "textRegion")                 
         #self.add_class("voronoi", 2, "imageRegion")
         """
         self.add_class("voronoi", 3, "lineDrawingRegion")
@@ -151,8 +151,8 @@ class BoltsDataset(utils.Dataset):
             polygon_class10 = []            
             polygon_class11 = []            
 
-            if 'imageRegion' in dic.keys():
-                for r in dic.get('imageRegion'):
+            if 'textRegion' in dic.keys():
+                for r in dic.get('textRegion'):
                     for j in r.values():
                         polygon_class1.append(j)
             """
@@ -223,7 +223,7 @@ class BoltsDataset(utils.Dataset):
                 polygons11=polygon_class11
             '''
             
-            print("image {} is added".format(a['ID']+'.tif'))
+            print("image {} is added".format(a['ID']+'.jpg'))
             
         
     def load_mask(self, image_id):
@@ -255,7 +255,7 @@ class BoltsDataset(utils.Dataset):
                 col.append(r['x'])
             rr, cc = skimage.draw.polygon(row, col)
             mask[rr, cc, mask_idx] = 1            
-            textRegion_tuple = ('imageRegion', tuple(row), tuple(col))
+            textRegion_tuple = ('textRegion', tuple(row), tuple(col))
             voronois.append(textRegion_tuple)
             mask_idx+=1
         """
