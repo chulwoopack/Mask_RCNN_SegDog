@@ -199,7 +199,7 @@ class BoltsDataset(utils.Dataset):
                     for j in r.values():
                         polygon_class11.append(j)                                
             """          
-            image_path = os.path.join(dataset_dir, a['ID']+'.tif')          
+            image_path = os.path.join(dataset_dir, a['ID']+'.jpg')          
             image = skimage.io.imread(image_path, plugin='matplotlib') # not working with up_data
             h, w = image.shape[:2]
             
@@ -223,7 +223,7 @@ class BoltsDataset(utils.Dataset):
                 polygons11=polygon_class11
             '''
             
-            print("image {} is added".format(a['ID']+'.tif'))
+            print("image {} is added".format(a['ID']+'.jpg'))
             
         
     def load_mask(self, image_id):
