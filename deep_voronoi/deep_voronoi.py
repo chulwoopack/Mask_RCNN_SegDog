@@ -529,6 +529,7 @@ def detect_and_color_splash(model, image_path=None, video_path=None):
         # Save output
         file_name = "splash_{:%Y%m%dT%H%M%S}.png".format(datetime.datetime.now())
         skimage.io.imsave(file_name, splash)
+    """
     elif video_path:
         import cv2
         # Video capture
@@ -562,6 +563,7 @@ def detect_and_color_splash(model, image_path=None, video_path=None):
                 vwriter.write(splash)
                 count += 1
         vwriter.release()
+    """
     print("Saved to ", file_name)
 
 

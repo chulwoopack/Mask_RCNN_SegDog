@@ -372,6 +372,7 @@ def detect(model, dataset_dir, subset):
 
     # Read dataset
     dataset = NucleusDataset()
+    print(dataset_dir)
     dataset.load_nucleus(dataset_dir, subset)
     dataset.prepare()
     # Load over images
