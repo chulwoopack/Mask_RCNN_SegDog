@@ -305,7 +305,7 @@ def display_top_masks(image, mask, class_ids, class_names, limit=4):
     display_images(to_display, titles=titles, cols=limit + 1, cmap="Blues_r")
 
 
-def plot_precision_recall(AP, precisions, recalls):
+def plot_precision_recall(AP, precisions, recalls, iou_threshold=0.5):
     """Draw the precision-recall curve.
 
     AP: Average precision at IoU >= 0.5
@@ -314,7 +314,7 @@ def plot_precision_recall(AP, precisions, recalls):
     """
     # Plot the Precision-Recall curve
     _, ax = plt.subplots(1)
-    ax.set_title("Precision-Recall Curve. AP@50 = {:.3f}".format(AP))
+    ax.set_title("Precision-Recall Curve. AP@{} = {:.3f}".format(iou_threshold,AP))
     ax.set_ylim(0, 1.1)
     ax.set_xlim(0, 1.1)
     _ = ax.plot(recalls, precisions)

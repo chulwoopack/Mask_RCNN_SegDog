@@ -69,7 +69,7 @@ DEFAULT_LOGS_DIR = os.path.join(ROOT_DIR, "logs")
 ############################################################
 
 
-class BoltsConfig(Config):
+class VoronoisConfig(Config):
     """Configuration for training on the toy  dataset.
     Derives from the base Config class and overrides some values.
     """
@@ -84,7 +84,7 @@ class BoltsConfig(Config):
     IMAGES_PER_GPU = 1
 
     # Number of classes (including background)
-    NUM_CLASSES = 1 + 1  # Background + bolt & corrosion)
+    NUM_CLASSES = 1 + 1  # Background + Textregion)
 
     # Number of training steps per epoch
     STEPS_PER_EPOCH = 100
@@ -100,9 +100,9 @@ class BoltsConfig(Config):
 #  Dataset
 ############################################################
 
-class BoltsDataset(utils.Dataset):
+class VoronoisDataset(utils.Dataset):
 
-    def load_bolts(self, dataset_dir, subset):
+    def load_voronois(self, dataset_dir, subset):
         """Load a subset of the Balloon dataset.
         dataset_dir: Root directory of the dataset.
         subset: Subset to load: train or val
@@ -155,50 +155,7 @@ class BoltsDataset(utils.Dataset):
                 for r in dic.get('textRegion'):
                     for j in r.values():
                         polygon_class1.append(j)
-            """
-            if 'imageRegion' in dic.keys():
-                for r in dic.get('imageRegion'):
-                    for j in r.values():
-                        polygon_class2.append(j)
-            """
-            """
-            if 'lineDrawingRegion' in dic.keys():
-                for r in dic.get('lineDrawingRegion'):
-                    for j in r.values():
-                        polygon_class3.append(j)        
-            if 'graphicRegion' in dic.keys():
-                for r in dic.get('graphicRegion'):
-                    for j in r.values():
-                        polygon_class4.append(j)        
-            if 'tableRegion' in dic.keys():
-                for r in dic.get('tableRegion'):
-                    for j in r.values():
-                        polygon_class5.append(j)        
-            if 'chartRegion' in dic.keys():
-                for r in dic.get('chartRegion'):
-                    for j in r.values():
-                        polygon_class6.append(j)                                
-            if 'separatorRegion' in dic.keys():
-                for r in dic.get('separatorRegion'):
-                    for j in r.values():
-                        polygon_class7.append(j)        
-            if 'mathsRegion' in dic.keys():
-                for r in dic.get('mathsRegion'):
-                    for j in r.values():
-                        polygon_class8.append(j)                                
-            if 'noiseRegion' in dic.keys():
-                for r in dic.get('noiseRegion'):
-                    for j in r.values():
-                        polygon_class9.append(j)                                
-            if 'frameRegion' in dic.keys():
-                for r in dic.get('frameRegion'):
-                    for j in r.values():
-                        polygon_class10.append(j)                                
-            if 'unknownRegion' in dic.keys():
-                for r in dic.get('unknownRegion'):
-                    for j in r.values():
-                        polygon_class11.append(j)                                
-            """          
+            
             image_path = os.path.join(dataset_dir, a['ID']+'.jpg')          
             image = skimage.io.imread(image_path, plugin='matplotlib') # not working with up_data
             h, w = image.shape[:2]
@@ -211,17 +168,7 @@ class BoltsDataset(utils.Dataset):
                 class_num=1,
                 polygons1=polygon_class1,
                 polygons2=polygon_class2)
-            '''
-                            polygons3=polygon_class3,
-                polygons4=polygon_class4,
-                polygons5=polygon_class5,
-                polygons6=polygon_class6,
-                polygons7=polygon_class7,
-                polygons8=polygon_class8,
-                polygons9=polygon_class9,                
-                polygons10=polygon_class10,
-                polygons11=polygon_class11
-            '''
+           
             
             print("image {} is added".format(a['ID']+'.jpg'))
             
@@ -258,128 +205,6 @@ class BoltsDataset(utils.Dataset):
             textRegion_tuple = ('textRegion', tuple(row), tuple(col))
             voronois.append(textRegion_tuple)
             mask_idx+=1
-        """
-        for i, p in enumerate(info["polygons2"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, mask_idx] = 2     
-            imageRegion_tuple = ('imageRegion', tuple(row), tuple(col))
-            voronois.append(imageRegion_tuple)
-            mask_idx+=1
-        """
-        """    
-        for i, p in enumerate(info["polygons3"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 3
-            start_idx = start_idx+1            
-            lineDrawingRegion_tuple = ('lineDrawingRegion', tuple(row), tuple(col))
-            voronois.append(lineDrawingRegion_tuple)
-
-        for i, p in enumerate(info["polygons4"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 4
-            start_idx = start_idx+1            
-            graphicRegion_tuple = ('graphicRegion', tuple(row), tuple(col))
-            voronois.append(graphicRegion_tuple)
-
-        for i, p in enumerate(info["polygons5"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 5
-            start_idx = start_idx+1            
-            tableRegion_tuple = ('tableRegion', tuple(row), tuple(col))
-            voronois.append(tableRegion_tuple)
-
-        for i, p in enumerate(info["polygons6"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 6
-            start_idx = start_idx+1            
-            chartRegion_tuple = ('chartRegion', tuple(row), tuple(col))
-            voronois.append(chartRegion_tuple)
-
-        for i, p in enumerate(info["polygons7"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 7
-            start_idx = start_idx+1            
-            separatorRegion_tuple = ('separatorRegion', tuple(row), tuple(col))
-            voronois.append(separatorRegion_tuple)
-
-        for i, p in enumerate(info["polygons8"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 8
-            start_idx = start_idx+1            
-            mathsRegion_tuple = ('mathsRegion', tuple(row), tuple(col))
-            voronois.append(mathsRegion_tuple)
-
-        for i, p in enumerate(info["polygons9"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 9
-            start_idx = start_idx+1            
-            noiseRegion_tuple = ('noiseRegion', tuple(row), tuple(col))
-            voronois.append(noiseRegion_tuple)
-
-        for i, p in enumerate(info["polygons10"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 10
-            start_idx = start_idx+1            
-            frameRegion_tuple = ('frameRegion', tuple(row), tuple(col))
-            voronois.append(frameRegion_tuple)
-
-        for i, p in enumerate(info["polygons11"]):
-            row = []
-            col = []
-            for r in p:
-                row.append(r['y'])
-                col.append(r['x'])
-            rr, cc = skimage.draw.polygon(row, col)
-            mask[rr, cc, i+start_idx] = 11
-            start_idx = start_idx+1            
-            unknownRegion_tuple = ('unknownRegion', tuple(row), tuple(col))
-            voronois.append(unknownRegion_tuple)
-        """
 
         # Map class names to class IDs.
         #class_ids = np.array([self.class_names.index(v[0]) for v in voronois])
@@ -473,13 +298,13 @@ class BoltsDataset(utils.Dataset):
 def train(model):
     """Train the model."""
     # Training dataset.
-    dataset_train = BoltsDataset()
-    dataset_train.load_bolts(args.dataset, "train")
+    dataset_train = VoronoisDataset()
+    dataset_train.load_voronois(args.dataset, "train")
     dataset_train.prepare()
 
     # Validation dataset
-    dataset_val = BoltsDataset()
-    dataset_val.load_bolts(args.dataset, "val")
+    dataset_val = VoronoisDataset()
+    dataset_val.load_voronois(args.dataset, "val")
     dataset_val.prepare()
 
     # *** This training schedule is an example. Update to your needs ***
@@ -529,7 +354,6 @@ def detect_and_color_splash(model, image_path=None, video_path=None):
         # Save output
         file_name = "splash_{:%Y%m%dT%H%M%S}.png".format(datetime.datetime.now())
         skimage.io.imsave(file_name, splash)
-    """
     elif video_path:
         import cv2
         # Video capture
@@ -563,7 +387,6 @@ def detect_and_color_splash(model, image_path=None, video_path=None):
                 vwriter.write(splash)
                 count += 1
         vwriter.release()
-    """
     print("Saved to ", file_name)
 
 
@@ -613,9 +436,9 @@ if __name__ == '__main__':
 
     # Configurations
     if args.command == "train":
-        config = BoltsConfig()
+        config = VoronoisConfig()
     else:
-        class InferenceConfig(BoltsConfig):
+        class InferenceConfig(VoronoisConfig):
             # Set batch size to 1 since we'll be running inference on
             # one image at a time. Batch size = GPU_COUNT * IMAGES_PER_GPU
             GPU_COUNT = 1
